@@ -11,9 +11,9 @@ RUN apt-get update && \
 RUN curl -fsSL https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey | apt-key add - && \
     echo "deb https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu bionic main" | tee /etc/apt/sources.list.d/rabbitmq.list
 
-# Install RabbitMQ (this will also install Erlang as a dependency)
+# Install Erlang and RabbitMQ from official Ubuntu repositories
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends rabbitmq-server && \
+    apt-get install -y --no-install-recommends erlang rabbitmq-server && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
