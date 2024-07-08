@@ -1,43 +1,19 @@
-version: '3.8'
+version: '3'
 services:
   rabbitmq:
-    container_name: rabbitmqServer
-    image: "rabbitmq:3.6-management-alpine"
-    hostname: "rabbitmq-host"
+    image: rabbitmq:3-management
     ports:
-      - "${RABBITMQ_PORT}:5672"
-      - "${RABBITMQ_MANAGEMENT_PORT}:15672"
-    environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
-    healthcheck:
-      test: ["CMD", "rabbitmqctl", "status"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-
+      - "5672:5672"
+      - "15672:15672"
   producer:
     build:
       context: .
+      dockerfile: Dockerfile-producer
     depends_on:
-      rabbitmq:
-        condition: service_healthy
-    command: ["/bin/bash", "-c", ". venv/bin/activate && python producer.py"]
-    environment:
-      RABBITMQ_HOST: rabbitmq
-      RABBITMQ_PORT: ${RABBITMQ_PORT}
-      RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
-      RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS}
-
+      - rabbitmq
   consumer:
     build:
       context: .
+      dockerfile: Dockerfile-consumer
     depends_on:
-      rabbitmq:
-        condition: service_healthy
-    command: ["/bin/bash", "-c", ". venv/bin/activate && python consumer.py"]
-    environment:
-      RABBITMQ_HOST: rabbitmq
-      RABBITMQ_PORT: ${RABBITMQ_PORT}
-      RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
-      RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS}
+      - rabbitmq
