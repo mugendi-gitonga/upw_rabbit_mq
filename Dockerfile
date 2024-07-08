@@ -1,15 +1,17 @@
 # Use an official Python runtime as a parent image
-FROM python:3.10-slim
+FROM python:3.10-slim as base
 
-# Install necessary packages and RabbitMQ
+# Install necessary packages
 RUN apt-get update && \
     apt-get install -y gnupg2 wget curl && \
     curl -fsSL https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | apt-key add - && \
     echo "deb https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/deb/debian buster main" | tee /etc/apt/sources.list.d/rabbitmq.list && \
     apt-get update && \
-    apt-get install -y rabbitmq-server || (cat /var/log/apt/term.log && cat /var/log/apt/history.log && exit 1) && \
+    apt-get install -y rabbitmq-server && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+FROM base as builder
 
 # Set the working directory in the container
 WORKDIR /app
