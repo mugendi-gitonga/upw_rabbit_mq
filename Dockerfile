@@ -3,11 +3,11 @@ FROM python:3.10-slim
 
 # Install necessary packages
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends gnupg2 wget curl lsb-release && \
+    apt-get install -y --no-install-recommends gnupg2 wget curl lsb-release software-properties-common && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Add Erlang repository and install Erlang
+# Add Erlang repository
 RUN wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb && \
     dpkg -i erlang-solutions_2.0_all.deb && \
     rm erlang-solutions_2.0_all.deb && \
