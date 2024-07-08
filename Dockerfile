@@ -1,12 +1,18 @@
 # Use an official Python runtime as a parent image
 FROM python:3.10-slim
 
-# Install necessary packages and RabbitMQ
+# Install necessary packages
 RUN apt-get update && \
-    apt-get install -y gnupg2 wget curl && \
-    curl -fsSL https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | apt-key add - && \
-    echo "deb https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/deb/debian buster main" | tee /etc/apt/sources.list.d/rabbitmq.list && \
-    apt-get update && \
+    apt-get install -y gnupg wget curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Add RabbitMQ signing key and repository
+RUN curl -fsSL https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey | gpg --dearmor -o /usr/share/keyrings/rabbitmq-archive-keyring.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/rabbitmq-archive-keyring.gpg] https://packagecloud.io/rabbitmq/rabbitmq-server/debian/ buster main" | tee /etc/apt/sources.list.d/rabbitmq.list
+
+# Install RabbitMQ
+RUN apt-get update && \
     apt-get install -y rabbitmq-server && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
