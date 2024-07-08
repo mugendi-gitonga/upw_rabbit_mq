@@ -10,10 +10,10 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: user
       RABBITMQ_DEFAULT_PASS: password
-    command: ["/bin/bash", "-c", "rabbitmq-server & sleep 10 && . venv/bin/activate && python producer.py"]
+    command: ["/bin/bash", "-c", "rabbitmq-server & sleep 15 && . venv/bin/activate && python producer.py"]
   consumer:
     build:
       context: .
     depends_on:
       - app
-    command: ["/bin/bash", "-c", "sleep 15 && . venv/bin/activate && python consumer.py"]
+    command: ["/bin/bash", "-c", "sleep 10 && . venv/bin/activate && python consumer.py"]
