@@ -1,8 +1,9 @@
 version: '3.8'
 services:
   rabbitmq:
-    build:
-      context: .
+    container_name: rabbitmqServer
+    image: "rabbitmq:3.6-management-alpine"
+    hostname: "rabbitmq-host"
     ports:
       - "${RABBITMQ_PORT}:5672"
       - "${RABBITMQ_MANAGEMENT_PORT}:15672"
