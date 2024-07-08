@@ -3,26 +3,23 @@ FROM python:3.10-slim
 
 # Install necessary packages
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends gnupg2 wget curl lsb-release software-properties-common && \
-    echo "deb http://archive.ubuntu.com/ubuntu bionic main" > /etc/apt/sources.list && \
+    apt-get install -y --no-install-recommends gnupg2 wget curl lsb-release && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Add Erlang repository and its key
+# Add Erlang Solutions repository
 RUN wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb && \
     dpkg -i erlang-solutions_2.0_all.deb && \
     rm erlang-solutions_2.0_all.deb && \
     echo "deb https://packages.erlang-solutions.com/ubuntu bionic contrib" > /etc/apt/sources.list.d/erlang.list && \
-    curl -fsSL https://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc | gpg --dearmor -o /usr/share/keyrings/erlang.gpg && \
-    echo "deb [signed-by=/usr/share/keyrings/erlang.gpg] https://packages.erlang-solutions.com/ubuntu bionic contrib" | tee /etc/apt/sources.list.d/erlang.list && \
     apt-get update && \
     apt-get install -y --no-install-recommends esl-erlang && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # Add RabbitMQ repository and its key
-RUN curl -fsSL https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey | gpg --dearmor -o /usr/share/keyrings/rabbitmq.gpg && \
-    echo "deb [signed-by=/usr/share/keyrings/rabbitmq.gpg] https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu bionic main" | tee /etc/apt/sources.list.d/rabbitmq.list
+RUN curl -fsSL https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey | apt-key add - && \
+    echo "deb https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu bionic main" | tee /etc/apt/sources.list.d/rabbitmq.list
 
 # Install RabbitMQ
 RUN apt-get update && \
@@ -42,7 +39,7 @@ RUN python -m venv venv && \
     pip install --no-cache-dir -r requirements.txt
 
 # Expose necessary ports
-EXPOSE 5672 15672 80
+EXPOSE 5672 15672
 
 # Command to start RabbitMQ server
 CMD ["rabbitmq-server"]
