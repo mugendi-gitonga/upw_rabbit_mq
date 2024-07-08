@@ -13,7 +13,7 @@ RUN wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb && \
     dpkg -i erlang-solutions_2.0_all.deb && \
     rm erlang-solutions_2.0_all.deb && \
     echo "deb https://packages.erlang-solutions.com/debian buster contrib" > /etc/apt/sources.list.d/erlang.list && \
-    curl -fsSL https://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc | gpg --dearmor -o /usr/share/keyrings/erlang.gpg && \
+    curl -fsSL https://packages.erlang-solutions.com/debian/erlang_solutions.asc | gpg --dearmor -o /usr/share/keyrings/erlang.gpg && \
     echo "deb [signed-by=/usr/share/keyrings/erlang.gpg] https://packages.erlang-solutions.com/debian buster contrib" | tee /etc/apt/sources.list.d/erlang.list && \
     apt-get update && \
     apt-get install -y --no-install-recommends esl-erlang && \
