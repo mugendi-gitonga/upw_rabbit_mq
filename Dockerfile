@@ -12,6 +12,7 @@ RUN apt-get update && \
 RUN wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb && \
     dpkg -i erlang-solutions_2.0_all.deb && \
     rm erlang-solutions_2.0_all.deb && \
+    echo "deb https://packages.erlang-solutions.com/debian buster contrib" > /etc/apt/sources.list.d/erlang.list && \
     apt-get update && \
     apt-get install -y --no-install-recommends esl-erlang && \
     apt-get clean && \
@@ -19,7 +20,7 @@ RUN wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb && \
 
 # Add RabbitMQ repository and its key
 RUN curl -fsSL https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey | apt-key add - && \
-    echo "deb https://packagecloud.io/rabbitmq/rabbitmq-server/debian/ bionic main" | tee /etc/apt/sources.list.d/rabbitmq.list
+    echo "deb https://packagecloud.io/rabbitmq/rabbitmq-server/debian/ buster main" | tee /etc/apt/sources.list.d/rabbitmq.list
 
 # Install RabbitMQ
 RUN apt-get update && \
