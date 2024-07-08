@@ -1,0 +1,42 @@
+version: '3.8'
+services:
+  rabbitmq:
+    build:
+      context: .
+    ports:
+      - "${RABBITMQ_PORT}:5672"
+      - "${RABBITMQ_MANAGEMENT_PORT}:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  producer:
+    build:
+      context: .
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    command: ["/bin/bash", "-c", ". venv/bin/activate && python producer.py"]
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: ${RABBITMQ_PORT}
+      RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS}
+
+  consumer:
+    build:
+      context: .
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    command: ["/bin/bash", "-c", ". venv/bin/activate && python consumer.py"]
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: ${RABBITMQ_PORT}
+      RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS}
