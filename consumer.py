@@ -17,7 +17,14 @@ def callback(ch, method, properties, body):
 
 def start_worker():
     # Establish a connection to RabbitMQ
-    connection = pika.BlockingConnection(pika.ConnectionParameters('RABBITMQ_HOST', 5672))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(
+        host=os.getenv('RABBITMQ_HOST'),
+        port=int(os.getenv('RABBITMQ_PORT')),
+        credentials=pika.PlainCredentials(
+            username=os.getenv('RABBITMQ_USER'),
+            password=os.getenv('RABBITMQ_PASS')
+        )
+    ))
     channel = connection.channel()
 
     # Declare a queue
