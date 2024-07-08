@@ -3,17 +3,22 @@ FROM python:3.10-slim
 
 # Install necessary packages
 RUN apt-get update && \
-    apt-get install -y gnupg wget curl && \
+    apt-get install -y --no-install-recommends gnupg wget curl lsb-release && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Add RabbitMQ signing key and repository
-RUN curl -fsSL https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey | gpg --dearmor -o /usr/share/keyrings/rabbitmq-archive-keyring.gpg && \
-    echo "deb [signed-by=/usr/share/keyrings/rabbitmq-archive-keyring.gpg] https://packagecloud.io/rabbitmq/rabbitmq-server/debian/ buster main" | tee /etc/apt/sources.list.d/rabbitmq.list
+# Add Erlang repository
+RUN curl -fsSL https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb -o erlang-solutions_2.0_all.deb && \
+    dpkg -i erlang-solutions_2.0_all.deb && \
+    rm erlang-solutions_2.0_all.deb
 
-# Install RabbitMQ
+# Add RabbitMQ repository
+RUN curl -fsSL https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey | apt-key add - && \
+    echo "deb https://packagecloud.io/rabbitmq/rabbitmq-server/debian/ $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/rabbitmq.list
+
+# Install Erlang and RabbitMQ
 RUN apt-get update && \
-    apt-get install -y rabbitmq-server && \
+    apt-get install -y --no-install-recommends esl-erlang rabbitmq-server && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
