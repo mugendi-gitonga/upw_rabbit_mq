@@ -8,12 +8,12 @@ services:
   producer:
     build:
       context: .
-      dockerfile: Dockerfile-producer
     depends_on:
       - rabbitmq
+    command: ["/bin/bash", "-c", ". venv/bin/activate && python producer.py"]
   consumer:
     build:
       context: .
-      dockerfile: Dockerfile-consumer
     depends_on:
       - rabbitmq
+    command: ["/bin/bash", "-c", ". venv/bin/activate && python consumer.py"]
