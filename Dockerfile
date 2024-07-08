@@ -10,9 +10,14 @@ RUN apt-get update && \
 # Add Erlang Solutions repository
 RUN wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb && \
     dpkg -i erlang-solutions_2.0_all.deb && \
-    rm erlang-solutions_2.0_all.deb && \
-    echo "deb https://packages.erlang-solutions.com/ubuntu bionic contrib" > /etc/apt/sources.list.d/erlang.list && \
-    apt-get update && \
+    rm erlang-solutions_2.0_all.deb
+
+# Add the Erlang Solutions key and repository
+RUN curl -fsSL https://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc | gpg --dearmor -o /usr/share/keyrings/erlang.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/erlang.gpg] https://packages.erlang-solutions.com/ubuntu bionic contrib" | tee /etc/apt/sources.list.d/erlang.list
+
+# Install Erlang
+RUN apt-get update && \
     apt-get install -y --no-install-recommends esl-erlang && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
