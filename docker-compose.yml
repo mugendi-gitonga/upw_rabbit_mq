@@ -5,15 +5,15 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-  producer:
-    build:
-      context: .
-    depends_on:
-      - rabbitmq
-    command: ["/bin/bash", "-c", ". venv/bin/activate && python producer.py"]
   consumer:
     build:
       context: .
     depends_on:
       - rabbitmq
     command: ["/bin/bash", "-c", ". venv/bin/activate && python consumer.py"]
+  producer:
+    build:
+      context: .
+    depends_on:
+      - rabbitmq
+    command: ["/bin/bash", "-c", ". venv/bin/activate && python producer.py"]
