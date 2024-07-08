@@ -8,9 +8,9 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Add Erlang Solutions key and repository
-# RUN wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb && \
-#     dpkg -i erlang-solutions_2.0_all.deb && \
-#     rm erlang-solutions_2.0_all.deb
+RUN wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb && \
+    dpkg -i erlang-solutions_2.0_all.deb && \
+    rm erlang-solutions_2.0_all.deb
 
 RUN curl -fsSL https://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc | apt-key add - && \
     echo "deb https://packages.erlang-solutions.com/ubuntu bionic contrib" | tee /etc/apt/sources.list.d/erlang.list
