@@ -7,7 +7,7 @@ RUN apt-get update && \
     curl -fsSL https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | apt-key add - && \
     echo "deb https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/deb/debian buster main" | tee /etc/apt/sources.list.d/rabbitmq.list && \
     apt-get update && \
-    apt-get install -y rabbitmq-server && \
+    apt-get install -y rabbitmq-server || (cat /var/log/apt/term.log && cat /var/log/apt/history.log && exit 1) && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
