@@ -1,6 +1,9 @@
 import pika
 import time
 import json
+import os
+
+RABBITMQ_HOST = os.getenv('RABBITMQ_HOST')
 
 def callback(ch, method, properties, body):
     data = json.loads(body)
@@ -14,7 +17,7 @@ def callback(ch, method, properties, body):
 
 def start_worker():
     # Establish a connection to RabbitMQ
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', 5672))
+    connection = pika.BlockingConnection(pika.ConnectionParameters('RABBITMQ_HOST', 5672))
     channel = connection.channel()
 
     # Declare a queue

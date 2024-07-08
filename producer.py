@@ -2,13 +2,16 @@ import pika
 import uuid
 import datetime
 import json
+import os
+
+RABBITMQ_HOST = os.getenv('RABBITMQ_HOST')
 
 def send_task(message):
     # Establish a connection to RabbitMQ
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', 5672))
+    connection = pika.BlockingConnection(pika.ConnectionParameters('RABBITMQ_HOST', 5672))
     channel = connection.channel()
 
-    # Declare a queuez
+    # Declare a queue
     channel.queue_declare(queue='task_queue', durable=True)
 
     # Publish to queue
