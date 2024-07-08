@@ -8,7 +8,7 @@ def send_task(message):
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', 5672))
     channel = connection.channel()
 
-    # Declare a queue
+    # Declare a queuez
     channel.queue_declare(queue='task_queue', durable=True)
 
     # Publish to queue
