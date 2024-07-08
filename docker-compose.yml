@@ -8,8 +8,8 @@ services:
       - "15672:15672"
       - "8080:80"
     environment:
-      RABBITMQ_DEFAULT_USER: user
-      RABBITMQ_DEFAULT_PASS: password
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
     command: ["/bin/bash", "-c", "rabbitmq-server & sleep 15 && . venv/bin/activate && python producer.py"]
   consumer:
     build:
