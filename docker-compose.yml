@@ -1,19 +1,19 @@
 version: '3'
 services:
-  rabbitmq:
-    image: rabbitmq:3-management
+  app:
+    build:
+      context: .
     ports:
       - "5672:5672"
       - "15672:15672"
+      - "8080:80"
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    command: ["/bin/bash", "-c", "rabbitmq-server & sleep 10 && . venv/bin/activate && python producer.py"]
   consumer:
     build:
       context: .
     depends_on:
-      - rabbitmq
-    command: ["/bin/bash", "-c", ". venv/bin/activate && python consumer.py"]
-  producer:
-    build:
-      context: .
-    depends_on:
-      - rabbitmq
-    command: ["/bin/bash", "-c", ". venv/bin/activate && python producer.py"]
+      - app
+    command: ["/bin/bash", "-c", "sleep 15 && . venv/bin/activate && python consumer.py"]
