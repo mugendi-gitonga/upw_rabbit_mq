@@ -1,7 +1,7 @@
 # Use an official Python runtime as a parent image
-FROM python:3.10-slim as base
+FROM python:3.10-slim
 
-# Install necessary packages
+# Install necessary packages and RabbitMQ
 RUN apt-get update && \
     apt-get install -y gnupg2 wget curl && \
     curl -fsSL https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | apt-key add - && \
@@ -10,8 +10,6 @@ RUN apt-get update && \
     apt-get install -y rabbitmq-server && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-
-FROM base as builder
 
 # Set the working directory in the container
 WORKDIR /app
