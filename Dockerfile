@@ -7,13 +7,27 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# Add Erlang Solutions key and repository
+RUN wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb && \
+    dpkg -i erlang-solutions_2.0_all.deb && \
+    rm erlang-solutions_2.0_all.deb
+
+RUN curl -fsSL https://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc | apt-key add - && \
+    echo "deb https://packages.erlang-solutions.com/ubuntu bionic contrib" | tee /etc/apt/sources.list.d/erlang.list
+
+# Install Erlang 26
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends esl-erlang && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 # Add RabbitMQ repository and its key
 RUN curl -fsSL https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey | apt-key add - && \
     echo "deb https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu bionic main" | tee /etc/apt/sources.list.d/rabbitmq.list
 
-# Install Erlang and RabbitMQ from official Ubuntu repositories
+# Install RabbitMQ
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends erlang rabbitmq-server && \
+    apt-get install -y --no-install-recommends rabbitmq-server && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
